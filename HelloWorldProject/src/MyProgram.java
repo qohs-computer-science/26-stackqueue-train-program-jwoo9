@@ -13,7 +13,7 @@ import java.util.LinkedList;
 public class MyProgram {
 	//create stacks for track A-D and variables for weight and limit
 	public static int val = 0;
-	public static int weightA = 0, weightB = 0, weightC = 0, weightD = 0;
+	public static int weightA = 0, weightB = 0, weightC = 0;
 	public static int limitTrackA = 100000, limitTrackB = 100000, limitTrackC = 100000;
 	public static Stack<Train> trackA = new Stack<Train>();
 	public static Stack<Train> trackB = new Stack<Train>();
@@ -39,8 +39,7 @@ public class MyProgram {
 		}//end catch
 
 		String name = x.nextLine();
-		System.out.println(name);
-		System.out.println(name.length());
+	
 		while (!name.toLowerCase().equals("end")){
 			if (name.substring(0,3).toLowerCase().equals("car")){
 				track0.add(new Train(name, x.nextLine(),x.nextLine(), x.nextLine(), x.nextInt(), x.nextInt()));
@@ -54,29 +53,85 @@ public class MyProgram {
 		}//end while
 		
 		//filter out track1
-
-		
+		Train temp = track0.remove();
+		while (!track0.isEmpty()){
+			if (temp.getMiles()>700){
+				track1.add(temp);
+				temp = track0.remove();
+		} //end if
+			else{
+				sort(track0,temp);
+				temp=track0.remove();
+			} //end else
+		} //end while
+		System.out.println(trackA);
+		System.out.println(trackB);
+		System.out.println(trackC);
 	}//end main
 
 	//make depart and sort method
 	public static void depart(Stack<Train> s){
 		while (!s.isEmpty())
 			System.out.println(s.pop());
+		System.out.println();
 	}//end method depart
 
-	public static void sort (Queue <Train> q){
-		while (!q.isEmpty()){
-			Train temp = q.remove();
-			if (temp.getDestination().toLowerCase().equals("trenton")){
-				weightA += temp.getWeight();
+	public static void sort (Queue <Train> q, Train t){
+
+			if (t.getDestination().toLowerCase().equals("trenton")){
+				weightA += t.getWeight();
 				if (weightA>limitTrackA){
 					weightA=0;
-					trackA.push(new Train ("ENG0000", "Trenton"));
+					trackA.push(new Train ("ENG00000", "Trenton"));
+					depart(trackA);
+					trackA.push(t);
 				}//end inner if
-
+				else if(t.isEngine()){
+					trackA.push(t);
+					weightA=0;
+					depart(trackA);
+				}//end inner else if
+				else{
+					trackA.push(t);
+				}//end else
 			}//end Trenton if
-		}//end while
+			else if (t.getDestination().toLowerCase().equals("charlotte")){
+				weightB += t.getWeight();
+				if (weightB>limitTrackB){
+					weightB=0;
+					trackB.push(new Train ("ENG00000", "Charlotte"));
+					depart(trackB);
+					trackB.push(t);
+				}//end inner if
+				else if(t.isEngine()){
+					trackB.push(t);
+					weightB=0;
+					depart(trackB);
+				}//end inner else if
+				else{
+					trackB.push(t);
+				}//end else
+			}//end Charlotte else if
+			else if (t.getDestination().toLowerCase().equals("baltimore")){
+				weightC += t.getWeight();
+				if (weightC>limitTrackC){
+					weightC=0;
+					trackC.push(new Train ("ENG00000", "Baltimore"));
+					depart(trackC);
+					trackC.push(t);
+				}//end inner if
+				else if(t.isEngine()){
+					trackC.push(t);
+					weightC=0;
+					depart(trackC);
+				}//end inner else if
+				else{
+					trackC.push(t);
+				}//end else
+			}//end Batimore else if
+			
+		
 
-	}//end method sort
+	 }//end method sort 
 
-}//end class
+ }//end class

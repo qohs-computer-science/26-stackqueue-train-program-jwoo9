@@ -36,6 +36,6 @@ public class Train {
         if(isEngine())
             return name + " is leaving for " + destination + " with the following cars: ";
         else
-            return name + " containing " + product + " weighing " + weight + "lbs";
+            return name + " containing " + product + " weighing " + weight + "lbs with " + miles + " miles";
     } //end toString
 }//end class Train
