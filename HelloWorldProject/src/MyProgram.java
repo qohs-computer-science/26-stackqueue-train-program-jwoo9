@@ -13,7 +13,7 @@ import java.util.LinkedList;
 public class MyProgram {
 	//create stacks for track A-D and variables for weight and limit
 	public static int val = 0;
-	public static int weightA = 0, weightB = 0, weightC = 0;
+	public static int weightA = 0, weightB = 0, weightC = 0; 
 	public static int limitTrackA = 100000, limitTrackB = 100000, limitTrackC = 100000;
 	public static Stack<Train> trackA = new Stack<Train>();
 	public static Stack<Train> trackB = new Stack<Train>();
@@ -52,22 +52,78 @@ public class MyProgram {
 			} //end else
 		}//end while
 		
-		//filter out track1
-		Train temp = track0.remove();
+		//filter out track0
+		System.out.println("\n Processing through track 0 \n");
+		Train temp = track0.peek();
 		while (!track0.isEmpty()){
 			if (temp.getMiles()>700){
 				track1.add(temp);
-				temp = track0.remove();
+				track0.remove();
+				temp = track0.peek();
 		} //end if
 			else{
 				sort(track0,temp);
-				temp=track0.remove();
+				track0.remove();
+				temp=track0.peek();
 			} //end else
 		} //end while
-		System.out.println(trackA);
-		System.out.println(trackB);
-		System.out.println(trackC);
+
+		System.out.println("\n Train cars with over 700 miles (in track 1):\n");
+		System.out.println(track1);
+
+		//filter out track 1 afterwards
+		System.out.println("\n\n Inspecting train cars on track 1 and processing\n");
+	
+		temp = track1.peek();
+		while (!track1.isEmpty()){
+			temp.setMiles(100);
+			sort(track1,temp);
+			track1.remove();
+			temp=track1.peek();
+		}//end while
+
+
+		System.out.println("\n\n Depart Remaining Trains\n");
+		if (trackA.isEmpty())
+			System.out.println("No cars remaining in Trenton Track");
+		else{
+			trackA.push(new Train ("ENG00000", "Trenton"));
+			depart(trackA);
+		}//end else
+		if (trackB.isEmpty())
+			System.out.println("No cars remaining in Charlotte Track");
+		else{
+			trackB.push(new Train ("ENG00000", "Charlotte"));
+			depart(trackB);
+		}//end else
+		if (trackC.isEmpty())
+			System.out.println("No cars remaining in Baltimore Track");
+		else{
+			trackC.push(new Train ("ENG00000", "Baltimore"));
+			depart(trackC);
+		}//end else
+
+
+		if (trackD.isEmpty())
+			System.out.println("No cars remaining in 'other' track");
+		else{
+			System.out.println("\n Cars Remaining in 'other' track\n");
+			System.out.println(trackD);
+		}//end else
+
+		
+		System.out.println();
+
 	}//end main
+
+
+
+
+
+
+
+
+
 
 	//make depart and sort method
 	public static void depart(Stack<Train> s){
@@ -76,8 +132,10 @@ public class MyProgram {
 		System.out.println();
 	}//end method depart
 
-	public static void sort (Queue <Train> q, Train t){
 
+
+
+	public static void sort (Queue <Train> q, Train t){
 			if (t.getDestination().toLowerCase().equals("trenton")){
 				weightA += t.getWeight();
 				if (weightA>limitTrackA){
@@ -85,6 +143,7 @@ public class MyProgram {
 					trackA.push(new Train ("ENG00000", "Trenton"));
 					depart(trackA);
 					trackA.push(t);
+					weightA += t.getWeight();
 				}//end inner if
 				else if(t.isEngine()){
 					trackA.push(t);
@@ -95,6 +154,8 @@ public class MyProgram {
 					trackA.push(t);
 				}//end else
 			}//end Trenton if
+
+
 			else if (t.getDestination().toLowerCase().equals("charlotte")){
 				weightB += t.getWeight();
 				if (weightB>limitTrackB){
@@ -102,6 +163,7 @@ public class MyProgram {
 					trackB.push(new Train ("ENG00000", "Charlotte"));
 					depart(trackB);
 					trackB.push(t);
+					weightB += t.getWeight();
 				}//end inner if
 				else if(t.isEngine()){
 					trackB.push(t);
@@ -112,6 +174,8 @@ public class MyProgram {
 					trackB.push(t);
 				}//end else
 			}//end Charlotte else if
+
+
 			else if (t.getDestination().toLowerCase().equals("baltimore")){
 				weightC += t.getWeight();
 				if (weightC>limitTrackC){
@@ -119,6 +183,7 @@ public class MyProgram {
 					trackC.push(new Train ("ENG00000", "Baltimore"));
 					depart(trackC);
 					trackC.push(t);
+					weightC += t.getWeight();
 				}//end inner if
 				else if(t.isEngine()){
 					trackC.push(t);
@@ -129,8 +194,18 @@ public class MyProgram {
 					trackC.push(t);
 				}//end else
 			}//end Batimore else if
+
+
+			else{
+				if (t.isEngine()){
+					trackD.push(t);
+					depart(trackD);
+				}//end inner if
+				else{
+					trackD.push(t);
+				}//end else
+			}//end else other
 			
-		
 
 	 }//end method sort 
 
